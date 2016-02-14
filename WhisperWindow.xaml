@@ -1,0 +1,45 @@
+﻿<Controls:MetroWindow x:Class="BusinessCats.WhisperWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:local="clr-namespace:BusinessCats"
+        mc:Ignorable="d"
+        TitleCaps="False"
+        WindowTransitionsEnabled="False"
+        GlowBrush="{DynamicResource AccentColorBrush}"
+        SnapsToDevicePixels="True"
+        Title="Whispering" Height="420" Width="360" Icon="Resources/partycats.ico">
+    <DockPanel>
+        <Viewbox DockPanel.Dock="Top" Stretch="Uniform" Height="32" MinHeight="32">
+            <TextBlock x:Name="textBlock" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="18.667" TextAlignment="Center"/>
+        </Viewbox>
+            <!--<TextBox x:Name="tbMessage" />-->
+            <TextBox x:Name="tbMessage" DockPanel.Dock="Bottom" Margin="0, 4, 0, 0"
+                         Controls:TextBoxHelper.Watermark="send a whisper..."
+                         Controls:TextBoxHelper.ButtonContent="8"
+                         Controls:TextBoxHelper.ButtonCommand="{Binding SendMessageCmd, Mode=OneWay }"
+                         Style="{DynamicResource MetroButtonTextBox}" />
+
+        <ListBox x:Name="lbWhispers" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock x:Name="message" Text="{Binding Path=Text}" TextWrapping="Wrap"/>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=IsSelf}" Value="True">
+                            <Setter TargetName="message" Property="TextAlignment" Value="Right"/>
+                            <Setter TargetName="message" Property="Foreground" Value="{DynamicResource GrayBrush2}"/>
+                            <!--<Setter TargetName="message" Property="Background" Value="{DynamicResource GrayBrush10}"/>-->
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</Controls:MetroWindow>
