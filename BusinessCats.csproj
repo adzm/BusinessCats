@@ -105,6 +105,7 @@
     </Compile>
     <Compile Include="Util\Util.cs" />
     <Compile Include="WellKnownCats.cs" />
+    <Compile Include="Whisper.cs" />
     <Compile Include="WhisperCat.cs" />
     <Compile Include="WhisperWindow.xaml.cs">
       <DependentUpon>WhisperWindow.xaml</DependentUpon>

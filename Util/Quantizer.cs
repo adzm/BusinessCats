@@ -256,10 +256,10 @@ namespace ImageQuantization
         public struct Color32
         {
 
-            public Color32(IntPtr pSourcePixel)
+            public Color32(IntPtr pSourcePixel) : this()
             {
-              this = (Color32) Marshal.PtrToStructure(pSourcePixel, typeof(Color32));
-                           
+                this.ARGB = Marshal.ReadInt32(pSourcePixel);
+                //this = (Color32) Marshal.PtrToStructure(pSourcePixel, typeof(Color32));                           
             }
 
             /// <summary>

@@ -25,46 +25,28 @@ namespace BusinessCats
     /// </summary>
     public partial class WhisperWindow : MetroWindow
     {
-        public class Whisper
-        {
-            public string Text { get; set; }
-
-            public bool IsSelf { get; set; }
-
-            public Whisper()
-            { }
-
-            public Whisper(bool isSelf, string text)
-            {
-                IsSelf = isSelf;
-                Text = text;
-            }
-        }
-
         public ICommand SendMessageCmd { get; set; }
 
         protected void InitCommands()
         {
             SendMessageCmd = new CommandCat(() => {
-                string text = tbMessage.Text;
+            string text = tbMessage.Text;
 
-                if (!seriousBusiness.whisperCat.SendWhisper(conversation, participant, text))
+                string cipherText = seriousBusiness.whisperCat.SendWhisper(conversation, participant, text);
+
+                if (string.IsNullOrEmpty(cipherText))
                 {
                     return;
                 }
 
-                _whispers.Add(new Whisper(true, text));
-
                 TextBoxHelper.SetWatermark(tbMessage, "...");
                 tbMessage.Text = "";
 
-                var border = (Border)VisualTreeHelper.GetChild(lbWhispers, 0);
-                var scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
-                scrollViewer.ScrollToBottom();
+                AddWhisper(new Whisper(true, text, cipherText));
             });
         }
 
-        public WhisperWindow(Conversation conversation, Participant participant, SeriousBusinessCat seriousBusiness)
+        public WhisperWindow(Conversation conversation, Participant participant, SeriousBusinessCat seriousBusiness, string info)
         {
             this.conversation = conversation;
             this.participant = participant;
@@ -77,13 +59,7 @@ namespace BusinessCats
             InitCommands();
 
             this.Activated += (s,e) => { FlashWindow.Stop(this); };
-
-//#if DEBUG
-//            _whispers.Add(new Whisper(true, "testing a really really long message, at least it seems pretty long, but i guess it is really not that long to begin with"));
-//            _whispers.Add(new Whisper(false, "Okay, looks good"));
-//            _whispers.Add(new Whisper(true, "Glad you think so, you jerk"));
-//#endif
-
+            
             lbWhispers.ItemsSource = _whispers;
 
             string bob = "neighbor cat";
@@ -94,6 +70,11 @@ namespace BusinessCats
             }
 
             textBlock.Text = bob;
+
+            if (!string.IsNullOrEmpty(info))
+            {
+                textBlock.ToolTip = info;
+            }
 
             this.Title = $"Whispering with {bob}";
 
@@ -107,17 +88,21 @@ namespace BusinessCats
 
         private ObservableCollection<Whisper> _whispers = new ObservableCollection<Whisper>();
 
-        public void AddWhisper(string text)
+        public void AddWhisper(Whisper whisper)
         {
             this.Dispatcher.Invoke(() => {
-                _whispers.Add(new Whisper(false, text));
-                var border = (Border)VisualTreeHelper.GetChild(lbWhispers, 0);
-                var scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
-                scrollViewer.ScrollToBottom();
+                _whispers.Add(whisper);
 
-                if (!this.IsActive)
+                if (IsLoaded)
                 {
-                    FlashWindow.Flash(this);
+                    var border = (Border)VisualTreeHelper.GetChild(lbWhispers, 0);
+                    var scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
+                    scrollViewer.ScrollToBottom();
+
+                    if (!whisper.IsSelf && !this.IsActive)
+                    {
+                        FlashWindow.Flash(this);
+                    }
                 }
             });
         }

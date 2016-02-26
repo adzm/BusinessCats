@@ -16,7 +16,7 @@ namespace ImageQuantization
 	/// <summary>
 	/// Quantize using an Octree
 	/// </summary>
-	public class OctreeQuantizer : Quantizer
+	public sealed class OctreeQuantizer : Quantizer
 	{
 		/// <summary>
 		/// Construct the octree quantizer

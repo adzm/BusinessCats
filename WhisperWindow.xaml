@@ -16,11 +16,15 @@
             <TextBlock x:Name="textBlock" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="18.667" TextAlignment="Center"/>
         </Viewbox>
             <!--<TextBox x:Name="tbMessage" />-->
-            <TextBox x:Name="tbMessage" DockPanel.Dock="Bottom" Margin="0, 4, 0, 0"
+        <TextBox x:Name="tbMessage" DockPanel.Dock="Bottom" Margin="0, 4, 0, 0"
                          Controls:TextBoxHelper.Watermark="send a whisper..."
                          Controls:TextBoxHelper.ButtonContent="8"
                          Controls:TextBoxHelper.ButtonCommand="{Binding SendMessageCmd, Mode=OneWay }"
-                         Style="{DynamicResource MetroButtonTextBox}" />
+                         Style="{DynamicResource MetroButtonTextBox}">
+            <TextBox.InputBindings>
+                <KeyBinding Command="{Binding SendMessageCmd, Mode=OneWay }" Key="Enter" />
+            </TextBox.InputBindings>
+        </TextBox>
 
         <ListBox x:Name="lbWhispers" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemContainerStyle>
@@ -30,7 +34,7 @@
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock x:Name="message" Text="{Binding Path=Text}" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="message" Text="{Binding Path=Text}" TextWrapping="Wrap" ToolTip="{Binding Path=CipherText}"/>
                     <DataTemplate.Triggers>
                         <DataTrigger Binding="{Binding Path=IsSelf}" Value="True">
                             <Setter TargetName="message" Property="TextAlignment" Value="Right"/>

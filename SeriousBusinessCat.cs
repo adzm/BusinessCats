@@ -28,10 +28,6 @@ namespace BusinessCats
         private List<LyncConversation> _conversations = new List<LyncConversation>();
 
 
-//#if DEBUG
-//        WhisperWindow _testWhisper;
-//#endif
-
         public SeriousBusinessCat(MainWindow main)
         {
             this._main = main;
@@ -40,10 +36,14 @@ namespace BusinessCats
 
             try
             {
-//#if DEBUG
-//                _testWhisper = new WhisperWindow(null, null, null);
-//                _testWhisper.Show();
-//#endif
+#if DEBUG
+                var _testWhisper = new WhisperWindow(null, null, null, "Your key: 12345\r\nTheir key: 6789A");
+     
+                _testWhisper.AddWhisper(new Whisper(true, "testing a really really long message, at least it seems pretty long, but i guess it is really not that long to begin with", "cipher1"));
+                _testWhisper.AddWhisper(new Whisper(false, "okay, looks good", "cipher2"));
+                _testWhisper.AddWhisper(new Whisper(true, "glad you think so, you jerk", "cipher3"));
+                _testWhisper.Show();
+#endif
 
 
                 //Start the conversation
@@ -534,50 +534,129 @@ namespace BusinessCats
                 return "base64:" + System.Convert.ToBase64String(memStream.ToArray());
             }
         }
-
-        protected string ScaleToData(System.Drawing.Image image, double scale)
+        protected string ScaleToWidth(System.Drawing.Image image, int width)
         {
-            var newWidth = (image.Width * scale) + 0.5;
-            var newHeight = (image.Height * scale) + 0.5;
+            var newWidth = width;
+            var newHeight = (int)((image.Height * (width / (double)image.Width)) + 0.5);
 
-            using (var newImage = new System.Drawing.Bitmap(image, (int)newWidth, (int)newHeight))
+            string data = "";
+
+            if (newWidth == image.Width && newHeight == image.Height)
             {
-                string data = ImageToData(newImage);
-
-                System.Diagnostics.Debug.Print("Resize ({0},{1}) -> ({2},{3}) -- len={4}", image.Width, image.Height, newWidth, newHeight, data.Length);
-
-                return data;
+                data = ImageToData(image);
             }
+            else {
+                using (var newImage = new System.Drawing.Bitmap(image, newWidth, newHeight))
+                {
+                    data = ImageToData(newImage);
+                }
+            }
+
+            System.Diagnostics.Debug.Print("Resize ({0},{1}) -> ({2},{3}) -- len={4}", image.Width, image.Height, newWidth, newHeight, data.Length);
+
+            return data;
         }
 
         protected const int threshold = 65000;
 
         public string DataFromImage(System.Drawing.Image image, bool useMaxWidth = true)
         {
+
             int maxWidth = useMaxWidth ? _main.CalcMaxWidth() : int.MaxValue;
-            double scale = 1.0;
-            if (image.Width > maxWidth)
+            if (maxWidth <= 0)
             {
-                scale = maxWidth / (double)image.Width;
+                maxWidth = 1;
+            }
+
+            if (maxWidth > image.Width)
+            {
+                maxWidth = image.Width;
+            }
+            
+            // The quantizer runs super slow with big images so start at a small reasonable size
+            int newWidth = 640; // starting point
+
+            if (newWidth > maxWidth)
+            {
+                newWidth = maxWidth;
             }
 
             string data = "";
-            do
-            {
-                data = ScaleToData(image, scale);
 
-                if (data.Length >= threshold)
+            // keep scaling down until we go below the threshold
+            data = ScaleToWidth(image, newWidth);
+
+            if (data.Length < threshold && newWidth < maxWidth)
+            {
+                // already below threshold at our starting point? try starting at 1600 px then
+
+                newWidth = 1600;
+
+                if (newWidth > maxWidth)
                 {
-                    if (data.Length > threshold + 2)
-                    {
-                        scale *= 0.75;
-                    }
-                    else
-                    {
-                        scale *= 0.95;
-                    }
+                    newWidth = maxWidth;
                 }
-            } while (data.Length >= threshold);
+
+                data = ScaleToWidth(image, newWidth);
+            }
+
+            if (data.Length < threshold && newWidth < maxWidth)
+            {
+                // still below threshold at our starting point? start with the real size of the image i suppose, up to the hardlimit
+                const int hardLimit = 3840;
+
+                newWidth = image.Width;
+                if (newWidth > hardLimit)
+                {
+                    newWidth = hardLimit;
+                }
+
+                if (newWidth > maxWidth)
+                {
+                    newWidth = maxWidth;
+                }
+
+                data = ScaleToWidth(image, newWidth);
+            }
+
+            while (data.Length >= threshold)
+            {
+                int nextWidth = newWidth;
+
+                // scale down
+                double diffRatio = Math.Sqrt(threshold / (double)data.Length);
+                nextWidth = (int)(nextWidth * diffRatio);
+
+                // align to 8 px
+                nextWidth = (nextWidth / 8) * 8;
+
+                if (nextWidth == newWidth)
+                {
+                    nextWidth -= 8;
+                }
+
+                if (nextWidth <= 0)
+                {
+                    throw new Exception("Something very troubling is going on resizing this image you gave me.");
+                }
+
+                newWidth = nextWidth;
+                data = ScaleToWidth(image, newWidth);
+            }
+
+            // now we are below the threshold! this time let's just move up until we go over.
+            while (newWidth < maxWidth)
+            {
+                newWidth += 16;
+                string newData = ScaleToWidth(image, newWidth);
+                if (newData.Length < threshold)
+                {
+                    data = newData;
+                } else
+                {
+                    break;
+                }
+            }
 
             return data;
         }
@@ -586,7 +665,7 @@ namespace BusinessCats
         {
             using (var image = System.Drawing.Image.FromFile(filename))
             {
-                if (System.IO.Path.GetExtension(filename) == "gif" && image.Width < _main.CalcMaxWidth())
+                if (System.IO.Path.GetExtension(filename).ToLower() == "gif" && image.Width < _main.CalcMaxWidth())
                 {
                     string data = "base64:" + System.Convert.ToBase64String(System.IO.File.ReadAllBytes(filename));
                     if (data.Length < threshold)

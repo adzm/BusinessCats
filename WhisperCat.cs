@@ -49,16 +49,14 @@ namespace BusinessCats
             }
             else if (text.StartsWith(whisperPrefix) && text.StartsWith(whisperPrefix + "<~"))
             {
-                return ExtractWhisper(conversation, participant, Ascii85.Decode(text.Substring(whisperHandshakePrefix.Length)));
+                return ExtractWhisper(conversation, participant, Ascii85.Decode(text.Substring(whisperHandshakePrefix.Length)), text);
             }
 
             return false;
         }
 
-        private void SendWhisperData(Conversation conversation, byte[] data)
+        private void SendWhisperData(Conversation conversation, string whisperText)
         {
-            var whisperText = whisperPrefix + Ascii85.Encode(data);
-
             bool sendAsRtf = true;
 
             if (sendAsRtf)
@@ -130,12 +128,14 @@ namespace BusinessCats
 
             p.DeriveKey(keyBlob);
 
-            Application.Current.Dispatcher.Invoke(() => { FindOrCreateWhisperWindow(conversation, participant).Show(); });
+            string info = $"Your key: {Ascii85.Encode(p.GetPublicKey())}\r\nTheir key: {Ascii85.Encode(keyBlob)}";
+
+            Application.Current.Dispatcher.Invoke(() => { FindOrCreateWhisperWindow(conversation, participant, info).Show(); });
 
             return true;
         }
 
-        private bool ExtractWhisper(Conversation conversation, Participant participant, byte[] textBlob)
+        private bool ExtractWhisper(Conversation conversation, Participant participant, byte[] textBlob, string cipherText)
         {
             var conv = seriousBusiness.FindConversation(conversation);
             if (conv == null)
@@ -185,33 +185,33 @@ namespace BusinessCats
 
             string plainTextString = Encoding.UTF8.GetString(plainText);
 
-            FindWhisperWindow(conversation, participant).AddWhisper(plainTextString);
+            FindWhisperWindow(conversation, participant).AddWhisper(new Whisper(false, plainTextString, cipherText));
 
             return true;
         }
 
-        public bool SendWhisper(Conversation conversation, Participant participant, string text)
+        public string SendWhisper(Conversation conversation, Participant participant, string text)
         {
             var conv = seriousBusiness.FindConversation(conversation);
             if (conv == null)
             {
-                return false;
+                return null;
             }
 
             var p = conv.FindParticipant(participant);
             if (p == null)
             {
-                return false;
+                return null;
             }
 
             if (p.dh == null)
             {
-                return false;
+                return null;
             }
 
             if (p.derivedKey == null)
             {
-                return false;
+                return null;
             }
 
             var bytes = Encoding.UTF8.GetBytes(text);
@@ -239,10 +239,12 @@ namespace BusinessCats
                     }
                 }
             }
+            
+            string whisperText = whisperPrefix + Ascii85.Encode(cipherText);
 
-            SendWhisperData(conv.conversation, cipherText);
+            SendWhisperData(conv.conversation, whisperText);
 
-            return true;
+            return whisperText;
         }
 
 
@@ -261,13 +263,13 @@ namespace BusinessCats
             return null;
         }
 
-        public WhisperWindow FindOrCreateWhisperWindow(Conversation conversation, Participant participant)
+        public WhisperWindow FindOrCreateWhisperWindow(Conversation conversation, Participant participant, string info)
         {
             WhisperWindow window = FindWhisperWindow(conversation, participant);
 
             if (window == null)
             {
-                window = new WhisperWindow(conversation, participant, seriousBusiness);
+                window = new WhisperWindow(conversation, participant, seriousBusiness, info);
                 _whisperWindows.Add(window);
 
                 window.Closed += (s, e) => { _whisperWindows.Remove(window); };
