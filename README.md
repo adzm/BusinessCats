@@ -2,6 +2,10 @@
 for Serious Business.
 for Skype for Business... and Lync for Anachronisms.
 
+## Download and Install
+
+[Download the zip file here](https://github.com/adzm/BusinessCats/releases/download/1.0.1/BusinessCats-1.0.1.zip) and extract the contents to a folder to run. As cats are distrustful and lazy creatures, and also portable ones, there is no installer.
+
 ## Features
 
 - Send inline images within your conversations!
@@ -22,10 +26,6 @@ for Skype for Business... and Lync for Anachronisms.
 ## Disclaimer
 
 This is for Serious Business, not cats or image macros, nor Business Cat nor even Krahs Wobniar. Parboil rabbit or maybe bone-in chicken and grind it. Garnish with catnip and heavy gravy.
-
-## Installation
-
-Cats are distrustful creatures; as such, just extract the contents of the zip file and run BusinessCats.exe.
 
 ## Building
 
