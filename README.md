@@ -27,6 +27,10 @@ for Skype for Business... and Lync for Anachronisms.
 
 This is for Serious Business, not cats or image macros, nor Business Cat nor even Krahs Wobniar. Parboil rabbit or maybe bone-in chicken and grind it. Garnish with catnip and heavy gravy.
 
+## Is it breakfast time?
+
+No! It is Serious Business Cats time!
+
 ## Building
 
 Built with Visual Studio 2015 and the Lync 2013 SDK.
