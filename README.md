@@ -1,6 +1,6 @@
 # Serious Business Cats
-for Serious Business.
-for Skype for Business... and Lync for Anachronisms.
+Embed images inline... for Serious Business!
+For Skype for Business and Lync for Anachronisms.
 
 ## Download and Install
 
@@ -8,7 +8,7 @@ for Skype for Business... and Lync for Anachronisms.
 
 ## Features
 
-- Send inline images within your conversations!
+- Embed images directly inline within your conversations!
 	- Optimized palette and automatic resizing to fit Lync / Skype for Business client limitations.
 	- Snip sections from the current display / screenshot.
 	- Snips are archived automatically.
