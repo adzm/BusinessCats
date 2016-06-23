@@ -25,12 +25,12 @@ namespace BusinessCats
     /// </summary>
     public partial class WhisperWindow : MetroWindow
     {
-        public ICommand SendMessageCmd { get; set; }
+        public ICommand SendMessageCmd { get; set; } 
 
         protected void InitCommands()
         {
             SendMessageCmd = new CommandCat(() => {
-            string text = tbMessage.Text;
+                string text = tbMessage.Text;
 
                 string cipherText = seriousBusiness.whisperCat.SendWhisper(conversation, participant, text);
 

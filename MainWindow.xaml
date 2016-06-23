@@ -43,7 +43,7 @@
                 <Rectangle Width="20" Height="20"
                    Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
+                        <VisualBrush RenderOptions.CachingHint="Cache" Stretch="Fill"
                          Visual="{StaticResource appbar_refresh}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
@@ -52,7 +52,7 @@
                 <Rectangle Width="20" Height="20"
                    Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
+                        <VisualBrush RenderOptions.CachingHint="Cache" Stretch="Fill"
                          Visual="{StaticResource appbar_folder_open}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
@@ -61,7 +61,7 @@
                 <Rectangle Width="20" Height="20"
                 Fill="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill"
+                        <VisualBrush RenderOptions.CachingHint="Cache" Stretch="Fill"
                         Visual="{StaticResource appbar_settings}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
@@ -104,7 +104,7 @@
                                            Margin="1, 1, 4, 1"
                                            HorizontalAlignment="Center" Fill="Gray">
                                 <Rectangle.OpacityMask>
-                                <VisualBrush Stretch="Uniform"
+                                <VisualBrush RenderOptions.CachingHint="Cache" Stretch="Uniform"
                                                      Visual="{StaticResource appbar_nyan}" />
                                 </Rectangle.OpacityMask>
                         </Rectangle>
@@ -137,7 +137,7 @@
                                                Height="16"
                                                HorizontalAlignment="Center" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                             <Rectangle.OpacityMask>
-                                <VisualBrush Stretch="Uniform"
+                                <VisualBrush RenderOptions.CachingHint="Cache" Stretch="Uniform"
                                                          Visual="{StaticResource appbar_lock}" />
                             </Rectangle.OpacityMask>
                         </Rectangle>

@@ -114,6 +114,17 @@ namespace BusinessCats
             try {
                 var matches = new List<LyncConversation>();
 
+
+                foreach (var c in _conversations)
+                {
+                    string desc = c.DescribeAsTitle();
+
+                    if (title == desc)
+                    {
+                        matches.Add(c);
+                    }
+                }
+
                 if (title.StartsWith("Conversation ("))
                 {
                     string titleCountString = Regex.Match(title, @"\d+").Value;
@@ -353,6 +364,21 @@ namespace BusinessCats
             //        // ignore
             //    }
             //}
+        }
+
+        public void AddConversation(string subject = "")
+        {
+            _main.lbConversations.Dispatcher.Invoke(() => {
+                var conv = client.ConversationManager.AddConversation();
+                if (conv != null && !string.IsNullOrEmpty(subject))
+                {
+                    //conv.AddParticipant(client.Self.Contact); sending messages to yourself causes trouble but good way to test things
+                    if (conv.CanSetProperty(ConversationProperty.Subject))
+                    {
+                        var task = LyncConversation.DoUpdateSubject(conv, subject);
+                    }
+                }
+            });
         }
 
         public void RefreshConversations(bool selectActive = false)
