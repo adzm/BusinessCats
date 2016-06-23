@@ -12,8 +12,9 @@ using MessageBox = System.Windows.MessageBox;
 using System.Configuration;
 using System.Security.Cryptography;
 
-using MahApps.Metro.Controls;
 using MahApps.Metro;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System.Windows.Threading;
 using System.IO;
 using System.Diagnostics;
@@ -33,6 +34,9 @@ namespace BusinessCats
         public MainWindow()
         {
             InitializeComponent();
+
+            this.MetroDialogOptions.ColorScheme = MetroDialogColorScheme.Accented;
+
             this.Closing += (s, e) =>
             {
                 try
@@ -46,7 +50,7 @@ namespace BusinessCats
                 }
             };
 
-            this.KeyDown += (s, e) =>
+            this.PreviewKeyDown += (s, e) =>
             {
                 const string hotkeyCheck = "X\x58\x5AZW\x59\x57Ym\x6C\x46";
 
