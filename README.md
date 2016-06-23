@@ -1,10 +1,14 @@
 # Serious Business Cats
-for Serious Business.
-for Skype for Business... and Lync for Anachronisms.
+Embed images inline... for Serious Business!
+For Skype for Business and Lync for Anachronisms.
+
+## Download and Install
+
+[Download the zip file here](https://github.com/adzm/BusinessCats/releases/download/1.0.1/BusinessCats-1.0.1.zip) and extract the contents to a folder to run. As cats are distrustful and lazy creatures, and also portable ones, there is no installer.
 
 ## Features
 
-- Send inline images within your conversations!
+- Embed images directly inline within your conversations!
 	- Optimized palette and automatic resizing to fit Lync / Skype for Business client limitations.
 	- Snip sections from the current display / screenshot.
 	- Snips are archived automatically.
@@ -23,9 +27,9 @@ for Skype for Business... and Lync for Anachronisms.
 
 This is for Serious Business, not cats or image macros, nor Business Cat nor even Krahs Wobniar. Parboil rabbit or maybe bone-in chicken and grind it. Garnish with catnip and heavy gravy.
 
-## Installation
+## Is it breakfast time?
 
-Cats are distrustful creatures; as such, just extract the contents of the zip file and run BusinessCats.exe.
+No! It is Serious Business Cats time!
 
 ## Building
 
