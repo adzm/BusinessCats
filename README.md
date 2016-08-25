@@ -4,7 +4,7 @@ For Skype for Business and Lync for Anachronisms.
 
 ## Download and Install
 
-[Download the zip file here](https://github.com/adzm/BusinessCats/releases/download/1.0.1/BusinessCats-1.0.1.zip) and extract the contents to a folder to run. As cats are distrustful and lazy creatures, and also portable ones, there is no installer.
+[Download the zip file here](https://github.com/adzm/BusinessCats/releases/download/1.0.2/BusinessCats-1.0.2.zip) and extract the contents to a folder to run. As cats are distrustful and lazy creatures, and also portable ones, there is no installer.
 
 ## Features
 
